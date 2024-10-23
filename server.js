@@ -34,6 +34,44 @@ function checkApiKey(req, res, next) {
 }
 
 app.get('/get', checkApiKey, async (req, res) => {
+  try {
+    const params = {
+      Bucket: BUCKET_NAME
+    };
+
+    const data = await s3.listObjectsV2(params).promise();
+
+    const imageFiles = data.Contents.filter(file =>
+      file.Key.endsWith('.jpg') || file.Key.endsWith('.png') || file.Key.endsWith('.jpeg') || file.Key.endsWith('.gif')
+    );
+
+    if (imageFiles.length === 0) {
+      return res.status(404).send('No images found');
+    }
+
+    const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
+
+    const imageParams = {
+      Bucket: BUCKET_NAME,
+      Key: randomImage.Key
+    };
+
+    const s3Stream = s3.getObject(imageParams).createReadStream();
+
+    const contentType = randomImage.Key.endsWith('.png') ? 'image/png' :
+      randomImage.Key.endsWith('.jpeg') || randomImage.Key.endsWith('.jpg') ? 'image/jpeg' :
+        randomImage.Key.endsWith('.gif') ? 'image/gif' : 'application/octet-stream';
+
+    res.setHeader('Content-Type', contentType);
+
+    s3Stream.pipe(res);
+  } catch (err) {
+    console.error('Error fetching image from S3', err);
+    res.status(500).send('Server error');
+  }
+});
+
+app.get('/create', checkApiKey, (req, res) => {
   // Spawn a child process to run the Python script
   const pythonProcess = spawn('python', ['prompt.py']);
 
