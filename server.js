@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const AWS = require('aws-sdk');
+const { spawn } = require('child_process');
+const path = require('path');
 
 dotenv.config();
 const app = express();
@@ -39,7 +41,7 @@ app.get('/get', checkApiKey, async (req, res) => {
 
     const data = await s3.listObjectsV2(params).promise();
 
-    const imageFiles = data.Contents.filter(file => 
+    const imageFiles = data.Contents.filter(file =>
       file.Key.endsWith('.jpg') || file.Key.endsWith('.png') || file.Key.endsWith('.jpeg') || file.Key.endsWith('.gif')
     );
 
@@ -57,8 +59,8 @@ app.get('/get', checkApiKey, async (req, res) => {
     const s3Stream = s3.getObject(imageParams).createReadStream();
 
     const contentType = randomImage.Key.endsWith('.png') ? 'image/png' :
-                        randomImage.Key.endsWith('.jpeg') || randomImage.Key.endsWith('.jpg') ? 'image/jpeg' :
-                        randomImage.Key.endsWith('.gif') ? 'image/gif' : 'application/octet-stream';
+      randomImage.Key.endsWith('.jpeg') || randomImage.Key.endsWith('.jpg') ? 'image/jpeg' :
+        randomImage.Key.endsWith('.gif') ? 'image/gif' : 'application/octet-stream';
 
     res.setHeader('Content-Type', contentType);
 
@@ -67,6 +69,21 @@ app.get('/get', checkApiKey, async (req, res) => {
     console.error('Error fetching image from S3', err);
     res.status(500).send('Server error');
   }
+});
+
+app.get('/create', checkApiKey, (req, res) => {
+  // Spawn a child process to run the Python script
+  const pythonProcess = spawn('python', ['prompt.py']);
+
+  pythonProcess.on('close', (code) => {
+    // Assuming the Python script saves the image as 'test_image.png'
+    const imagePath = path.join(__dirname, 'test_image.png');
+    res.sendFile(imagePath, (err) => {
+      if (err) {
+        res.status(500).send('Error generating image');
+      }
+    });
+  });
 });
 
 const port = process.env.PORT || 3000;
