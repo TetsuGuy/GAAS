@@ -75,7 +75,7 @@ app.get('/create', checkApiKey, (req, res) => {
   // Spawn a child process to run the Python script
   const pythonProcess = spawn('python', ['prompt.py']);
 
-  pythonProcess.on('close', (code) => {
+  pythonProcess.on('close', (_code) => {
     // Assuming the Python script saves the image as 'test_image.png'
     const imagePath = path.join(__dirname, 'test_image.png');
     res.sendFile(imagePath, (err) => {
