@@ -80,6 +80,7 @@ app.get('/create', checkApiKey, (req, res) => {
     const imagePath = path.join(__dirname, 'test_image.png');
     res.sendFile(imagePath, (err) => {
       if (err) {
+        console.lerror("Error generating image", err);
         res.status(500).send('Error generating image');
       }
     });
