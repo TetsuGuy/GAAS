@@ -19,7 +19,8 @@ RUN apt-get update && \
     libxml2-dev \
     libxmlsec1-dev \
     libffi-dev \
-    liblzma-dev && \
+    liblzma-dev \
+    python3-pip && \  # Install pip
     echo "Downloading Python..." && \
     wget https://www.python.org/ftp/python/3.10.11/Python-3.10.11.tgz && \
     echo "Extracting Python..." && \
@@ -40,12 +41,18 @@ RUN echo "Installing Node.js dependencies..." && \
     npm install && \
     echo "Node.js dependencies installed."
 
+# Install Python dependencies
+COPY requirements.txt ./
+RUN echo "Installing Python dependencies..." && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    echo "Python dependencies installed."
+
 # Second stage: Run stage with a smaller image
 FROM node:16-slim
 WORKDIR /usr/src/app
 
 # Copy built app from the first stage
-COPY --from=build /usr/src/app ./
+COPY --from=build /usr/src/app ./ 
 
 # Debug: List contents of the application directory
 RUN echo "Listing contents of /usr/src/app:" && \
