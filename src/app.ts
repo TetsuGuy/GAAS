@@ -1,5 +1,5 @@
 
-import { ServerExpress } from "./types/ServerExpress";
+import { ServerExpress } from "./types/server/ServerExpress";
 
 import express from "express";
 import dotenv from "dotenv"

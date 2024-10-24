@@ -1,10 +1,10 @@
-import { IServer } from "./Server";
+import { Server } from "./Server";
 import { Request, Response, Application, NextFunction } from 'express';
 
-import { ImageProviderAws } from "./ImageProviderAws";
-import { ImageProviderPython } from "./ImageProviderPython";
+import { ImageProviderAws } from "../image-provider/ImageProviderAws";
+import { ImageProviderPython } from "../image-provider/ImageProviderPython";
 
-export class ServerExpress implements IServer {
+export class ServerExpress implements Server {
   constructor(public app: Application) {}
 
   private checkApiKey(req: Request, res: Response, next: NextFunction) {
