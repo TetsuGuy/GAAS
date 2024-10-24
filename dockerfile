@@ -44,8 +44,8 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the Python requirements file and install dependencies
-COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY src/python/requirements.txt ./
+RUN pip3 install --no-cache-dir -r src/python/requirements.txt
 
 # Copy the rest of the application files (including server.js)
 COPY . .
