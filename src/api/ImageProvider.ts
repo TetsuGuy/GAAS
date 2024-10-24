@@ -1,4 +1,6 @@
 
-export interface ImageProvider {
-    getImage(): Promise<{ buffer: Buffer, type: string }>
+export interface ImageProvider<A = any,B = any,C = any> {
+    getImage(): Promise<A>
+    saveImage(): Promise<B>
+    createImage(): Promise<C>
 }

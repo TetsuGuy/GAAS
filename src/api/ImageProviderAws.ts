@@ -55,4 +55,12 @@ export class ImageProviderAws implements ImageProvider {
         const type = imageData.ContentType
         return { buffer, type }
     }
+
+    saveImage(): Promise<any> {
+        throw Error("Not yet implemented")
+    }
+
+    createImage(): Promise<any> {
+        throw Error("Not yet implemented")
+    }
 }
