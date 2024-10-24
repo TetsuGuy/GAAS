@@ -1,4 +1,4 @@
-# First stage: Build stage with all dependencies
+# Build stage with all dependencies
 FROM node:16 AS build
 
 # Install dependencies and Python
@@ -49,13 +49,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files (including server.js)
 COPY . .
-
-# Second stage: Run stage with a smaller image
-FROM node:16-slim
-WORKDIR /usr/src/app
-
-# Copy built app from the first stage
-COPY --from=build /usr/src/app ./
 
 # List contents of the application directory (for debugging)
 RUN ls -al /usr/src/app
