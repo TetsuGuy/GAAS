@@ -1,5 +1,4 @@
-import { ImageProvider } from "./ImageProvider";
-import { IServer } from "./IServer";
+import { IServer } from "./Server";
 import { Request, Response, Application, NextFunction } from 'express';
 
 import { ImageProviderAws } from "./ImageProviderAws";
@@ -47,7 +46,7 @@ export class ServerExpress implements IServer {
         }
       });
   
-      this.app.get('/create', async (req: Request, res: Response) => {
+      this.app.get('/create', async (_req: Request, res: Response) => {
         try {
           const imagePath = await imageProviderPython.createImage()
           res.sendFile(imagePath, (err: any) => {
