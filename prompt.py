@@ -23,13 +23,17 @@ pipe = FluxPipeline.from_pretrained("black-forest-labs/FLUX.1-dev", torch_dtype=
 pipe.enable_sequential_cpu_offload()
 pipe.vae.enable_slicing()
 pipe.vae.enable_tiling()
+
+# Load LoRa weights before setting up with Accelerator
 pipe.load_lora_weights("Mutli/gothgirlflux", weight_name="ravengriim13.safetensors", adapter_name="ravengriim")
 pipe.load_lora_weights("Mutli/gothgirlflux", weight_name="swaggy16.safetensors", adapter_name="swaggy")
 pipe.set_adapters(["ravengriim", "swaggy"], adapter_weights=[1, 1])
 
+# Prepare pipeline with Accelerator (sequential offload handles device management)
 accelerator = Accelerator()
 pipe = accelerator.prepare(pipe)
 
+# Generate an image
 num_images = 1
 output_dir = "generated_images"
 if not os.path.exists(output_dir):
