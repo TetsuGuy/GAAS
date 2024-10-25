@@ -3,9 +3,22 @@ import { Request, Response, Application, NextFunction } from 'express';
 
 import { ImageProviderAws } from "../image-provider/ImageProviderAws";
 import { ImageProviderPython } from "../image-provider/ImageProviderPython";
+import multer from 'multer';
+const upload = multer({ storage: multer.memoryStorage() });
+
+interface MulterRequest {
+  file?: {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    size: number;
+    buffer: Buffer;
+  };
+}
 
 export class ServerExpress implements Server {
-  constructor(public app: Application) {}
+  constructor(public app: Application) { }
 
   private checkApiKey(req: Request, res: Response, next: NextFunction) {
     const VALID_API_KEY = process.env.API_KEY;
@@ -31,22 +44,53 @@ export class ServerExpress implements Server {
       this.app.listen(port, () => {
         console.log(`Server running on port ${port}`);
       });
-  
+
       this.app.get('/get', this.checkApiKey, async (req: Request, res: Response) => {
-        try{
+        try {
           const { buffer, type } = await imageProviderAws.getImage()
           res.setHeader('Content-Type', type);
           res.send(buffer);
-        } catch(e) {
-          if(e === "Not found") {
+        } catch (e) {
+          if (e === "Not found") {
             res.status(404).send({ error: "Image not found" })
           } else {
             res.status(500).send("Server Error:" + e)
           }
         }
       });
-  
-      this.app.get('/create', async (_req: Request, res: Response) => {
+
+      this.app.get('/upload', (req: Request, res: Response) => {
+        res.send(`
+          <html>
+            <body>
+              <form action="/upload" method="POST" enctype="multipart/form-data">
+                <input type="file" name="image" accept="image/*" required />
+                <button type="submit">Upload Image</button>
+              </form>
+            </body>
+          </html>
+        `);
+      });
+
+      this.app.post('/upload', upload.single('image'), async (req: Request & MulterRequest, res: Response) => {
+        try {
+          if (!req.file) {
+            res.status(400).send('No file uploaded.');
+            return
+          }
+      
+          const { buffer, originalname, mimetype } = req.file;
+      
+          // Use ImageProvider to save the image to AWS S3
+          const imageUrl = await imageProviderAws.saveImage(buffer, originalname, mimetype);
+          res.send(`File ${originalname} uploaded successfully. You can close this window now.`);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Error uploading file.');
+        }
+      });
+
+      this.app.get('/create', this.checkApiKey, async (_req: Request, res: Response) => {
         try {
           const imagePath = await imageProviderPython.createImage()
           res.sendFile(imagePath, (err: any) => {
@@ -55,7 +99,7 @@ export class ServerExpress implements Server {
             }
           });
         } catch (e) {
-          res.status(500).send('Error generating image:' + e );
+          res.status(500).send('Error generating image:' + e);
         }
       });
     } catch (e) {

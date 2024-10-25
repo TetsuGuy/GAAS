@@ -15,6 +15,7 @@ export class ImageProviderAws implements ImageProvider {
             throw Error("Can't initialize ImageProviderAWS. Missing values.");
         }
 
+        // S3 Bucket
         this.s3 = new AWS.S3({
             accessKeyId,
             secretAccessKey,
@@ -40,7 +41,7 @@ export class ImageProviderAws implements ImageProvider {
         }
 
         const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
-        
+
         if (!randomImage.Key) {
             throw Error("Can't get random image")
         }
@@ -56,8 +57,16 @@ export class ImageProviderAws implements ImageProvider {
         return { buffer, type }
     }
 
-    saveImage(): Promise<any> {
-        throw Error("Not yet implemented")
+    async saveImage(fileBuffer: Buffer, fileName: string, mimeType: string): Promise<string> {
+        const uploadParams = {
+            Bucket: this.bucket,
+            Key: `uploads/${Date.now()}_${fileName}`,
+            Body: fileBuffer,
+            ContentType: mimeType,
+        };
+
+        const result = await this.s3.upload(uploadParams).promise();
+        return result.Location;
     }
 
     createImage(): Promise<any> {
