@@ -1,3 +1,3 @@
 export interface Server {
-    setup(): void
+  setup(): void
 }

@@ -1,4 +1,3 @@
-
 # Goth Girl Image Server 🎃🖤
 
 This is a **Node.js** server that serves hot, random goth girl images. The server is hosted on **Amazon AWS** via **EC2**, and users can access the images via an **API** using an **access token** for authentication.
