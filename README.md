@@ -15,6 +15,7 @@ This is a **Node.js** server that serves hot, random goth girl images. The serve
 - **AWS EC2**: Deployment platform to host the server.
 - **AWS S3**: Store or manage image assets in Amazon S3.
 - **AWS Access Tokens**: Secure access to the API endpoints using token-based authentication.
+- **Eslint + TypeScript + Prettier**: uniform code style and code standards
 
 ## API Endpoints
 
