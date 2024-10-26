@@ -72,10 +72,10 @@ pipe.set_adapters(loras, adapter_weights=lora_weights)
 # Settings
 prompt    = randomize_prompt()
 width     = 1080
-height    = 1920
-guidance  = 0
-steps     = 20
-seed      = random.randint(0,9999999999)
+height    = 1920 # standard full HD height and width generating a 9:16 image (portrait mode)
+guidance  = round(random.uniform(0, 15), 1) # guidance scale from 0 to 15 with 1 decimal point
+steps     = 20 # 20 is enough for now
+seed      = random.randint(0,9999999999) # random seed from 0 to 9999999999
 
 # Generation
 start_time = time.time()

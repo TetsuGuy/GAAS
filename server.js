@@ -73,7 +73,7 @@ app.get('/get', checkApiKey, async (req, res) => {
 
 app.get('/create', checkApiKey, (req, res) => {
   // Spawn a child process to run the Python script
-  const pythonProcess = spawn('python', ['prompt.py']);
+  const pythonProcess = spawn('python', ['fluxTxt2Img.py']);
 
   pythonProcess.on('close', (code) => {
     // Assuming the Python script saves the image as 'test_image.png'
