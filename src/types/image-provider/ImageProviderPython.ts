@@ -11,7 +11,7 @@ export class ImageProviderPython implements ImageProvider {
   }
   createImage(): Promise<string> {
     const promise = new Promise<string>((resolve) => {
-      const pythonProcess = spawn("python", ["src/python/prompt.py"])
+      const pythonProcess = spawn("python", ["src/python/fluxTxt2Img.py"])
       pythonProcess.on("close", (_code: any) => {
         const imagePath = path.join(__dirname, "test_image.png")
         resolve(imagePath)
