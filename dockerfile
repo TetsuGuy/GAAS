@@ -44,8 +44,8 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the Python requirements file and install dependencies
-COPY src/python/requirements.txt ./
-RUN pip3 install --no-cache-dir -r src/python/requirements.txt
+COPY ./src/python/requirements.txt ./
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application files (including server.js)
 COPY . .
@@ -55,4 +55,4 @@ RUN ls -al /usr/src/app
 
 # Expose the port and run the application
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["node", "server.ts"]
