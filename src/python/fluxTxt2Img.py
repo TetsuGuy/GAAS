@@ -8,7 +8,7 @@ from transformers import CLIPTextModel, CLIPTokenizer,T5EncoderModel, T5Tokenize
 from huggingface_hub import login
 import time
 import random
-from GAAS.src.python.promptGen import randomize_prompt
+from promptGen import randomize_prompt
 from loraWeightGen import generate_random_floats, filter_strings_based_on_floats
 
 # Login into Hugginface
@@ -54,9 +54,9 @@ pipe.vae.enable_slicing()
 pipe.vae.enable_tiling()
 
 # Load LoRA
-pipe.load_lora_weights("./loras/bexicutes21.safetensors", adapter_name="bexicutes21")
-pipe.load_lora_weights("./loras/ravengriim13.safetensors", adapter_name="ravengriim13")
-pipe.load_lora_weights("./loras/swaggy16.safetensors", adapter_name="swaggy16")
+pipe.load_lora_weights("Mutli/GAAS", weight_name="bexicutes21.safetensors", adapter_name="bexicutes21")
+pipe.load_lora_weights("Mutli/GAAS", weight_name="ravengriim13.safetensors", adapter_name="ravengriim13")
+pipe.load_lora_weights("Mutli/GAAS", weight_name="swaggy16.safetensors", adapter_name="swaggy16")
 
 lora_weights = generate_random_floats(3)
 loras = filter_strings_based_on_floats(["bexicutes21", "ravengriim13", "swaggy16"], lora_weights)
