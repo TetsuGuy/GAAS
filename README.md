@@ -1,4 +1,3 @@
-
 # Goth Girl Image Server 🎃🖤
 
 This is a **Node.js** server that serves hot, random goth girl images. The server is hosted on **Amazon AWS** via **EC2**, and users can access the images via an **API** using an **access token** for authentication.
@@ -16,6 +15,8 @@ This is a **Node.js** server that serves hot, random goth girl images. The serve
 - **AWS EC2**: Deployment platform to host the server.
 - **AWS S3**: Store or manage image assets in Amazon S3.
 - **AWS Access Tokens**: Secure access to the API endpoints using token-based authentication.
+- **Eslint + TypeScript + Prettier**: uniform code style and code standards
+- **Docker**: Deploy the system via Docker Container!
 
 ## API Endpoints
 
