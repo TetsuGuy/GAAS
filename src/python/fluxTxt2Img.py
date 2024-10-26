@@ -8,7 +8,7 @@ from transformers import CLIPTextModel, CLIPTokenizer,T5EncoderModel, T5Tokenize
 from huggingface_hub import login
 import time
 import random
-from promptGen import randomize_prompt
+from GAAS.src.python.promptGen import randomize_prompt
 from loraWeightGen import generate_random_floats, filter_strings_based_on_floats
 
 # Login into Hugginface
