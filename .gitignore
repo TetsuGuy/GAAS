@@ -42,3 +42,9 @@ Thumbs.db
 
 # Typescript compiled output
 dist/
+__pycache__/loraWeightGen.cpython-310.pyc
+__pycache__/promptGen.cpython-310.pyc
+loras/bexicutes21.safetensors
+loras/ravengriim13.safetensors
+loras/swaggy16.safetensors
+image.png
