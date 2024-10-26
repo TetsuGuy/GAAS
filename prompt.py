@@ -7,6 +7,9 @@ from diffusers.pipelines.flux.pipeline_flux import FluxPipeline
 from transformers import CLIPTextModel, CLIPTokenizer,T5EncoderModel, T5TokenizerFast
 from huggingface_hub import login
 import time
+import random
+from promptGen import randomize_prompt
+from loraWeightGen import generate_random_floats, filter_strings_based_on_floats
 
 # Login into Hugginface
 login("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") 
@@ -51,20 +54,28 @@ pipe.vae.enable_slicing()
 pipe.vae.enable_tiling()
 
 # Load LoRA
-pipe.load_lora_weights("D:/pinokio/api/stable-diffusion-webui-forge.git/app/models/Lora/bexicutes21.safetensors", adapter_name="bexicutes21")
-pipe.set_adapters("bexicutes21", adapter_weights=0.75)
+pipe.load_lora_weights("./loras/bexicutes21.safetensors", adapter_name="bexicutes21")
+pipe.load_lora_weights("./loras/ravengriim13.safetensors", adapter_name="ravengriim13")
+pipe.load_lora_weights("./loras/swaggy16.safetensors", adapter_name="swaggy16")
+
+lora_weights = generate_random_floats(3)
+loras = filter_strings_based_on_floats(["bexicutes21", "ravengriim13", "swaggy16"], lora_weights)
+
+
+
+pipe.set_adapters(loras, adapter_weights=lora_weights)
 
 #############
 # INFERENCE #
 #############
 
 # Settings
-prompt    = "a women with fat cleavage and fat waist, black and white hair standing at a beach with a black bikini. Her body is turned to the side and she is facing off into the distance. the angel is wide. Tattoo that reads 'Mommy'."
+prompt    = randomize_prompt()
 width     = 1080
 height    = 1920
 guidance  = 0
 steps     = 20
-seed      = 2011152402
+seed      = random.randint(0,9999999999)
 
 # Generation
 start_time = time.time()
