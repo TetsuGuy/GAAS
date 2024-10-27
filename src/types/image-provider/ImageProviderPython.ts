@@ -13,7 +13,7 @@ export class ImageProviderPython implements ImageProvider {
     const promise = new Promise<string>((resolve) => {
       const pythonProcess = spawn("python", ["src/python/fluxTxt2Img.py"])
       pythonProcess.on("close", (_code: any) => {
-        const imagePath = path.join(__dirname, "test_image.png")
+        const imagePath = path.join(__dirname, "image.png")
         resolve(imagePath)
       })
     })

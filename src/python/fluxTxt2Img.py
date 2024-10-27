@@ -10,9 +10,14 @@ import time
 import random
 from promptGen import randomize_prompt
 from loraWeightGen import generate_random_floats, filter_strings_based_on_floats
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Login into Hugginface
-login("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") 
+huggingface_token = os.getenv("HUGGINGFACE_TOKEN")
+login(huggingface_token) 
 
 # Model data type
 dtype = torch.bfloat16
@@ -90,4 +95,5 @@ image = pipe(
 end_time = time.time()
 generation_time = end_time - start_time
 print(f"Generating image took: {generation_time} seconds")
-image.save("image.png")
+save_path = os.path.join(os.path.dirname(__file__), "../types/image-provider/image.png")
+image.save(save_path)
