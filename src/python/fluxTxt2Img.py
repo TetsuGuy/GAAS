@@ -9,7 +9,7 @@ from huggingface_hub import login
 import time
 import random
 from promptGen import randomize_prompt
-from loraWeightGen import generate_random_floats, filter_strings_based_on_floats
+from loraWeightGen import generate_random_floats
 from dotenv import load_dotenv
 import os
 
@@ -64,7 +64,7 @@ pipe.load_lora_weights("Mutli/GAAS", weight_name="ravengriim13.safetensors", ada
 pipe.load_lora_weights("Mutli/GAAS", weight_name="swaggy16.safetensors", adapter_name="swaggy16")
 
 lora_weights = generate_random_floats(3)
-loras = filter_strings_based_on_floats(["bexicutes21", "ravengriim13", "swaggy16"], lora_weights)
+loras = ["bexicutes21", "ravengriim13", "swaggy16"]
 
 
 
