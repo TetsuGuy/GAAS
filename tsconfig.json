@@ -8,6 +8,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/svelte/src/main.js", "src/svelte/src/main.js"],
   "exclude": ["node_modules"]
 }
