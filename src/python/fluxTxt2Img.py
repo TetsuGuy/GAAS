@@ -63,12 +63,10 @@ pipe.load_lora_weights("Mutli/GAAS", weight_name="bexicutes21.safetensors", adap
 pipe.load_lora_weights("Mutli/GAAS", weight_name="ravengriim13.safetensors", adapter_name="ravengriim13")
 pipe.load_lora_weights("Mutli/GAAS", weight_name="swaggy16.safetensors", adapter_name="swaggy16")
 
-lora_weights = generate_random_floats(3)
-loras = ["bexicutes21", "ravengriim13", "swaggy16"]
+lora = random.choice(["ravengriim13", "swaggy16", "bexicutes21"])
+lora_weight = round(random.uniform(0.5, 1), 2)
 
-
-
-pipe.set_adapters(loras, adapter_weights=lora_weights)
+pipe.set_adapters(lora, adapter_weights=lora_weight)
 
 #############
 # INFERENCE #
@@ -76,9 +74,10 @@ pipe.set_adapters(loras, adapter_weights=lora_weights)
 
 # Settings
 prompt    = randomize_prompt()
+negative_prompt = "Watermark, Text, censored, deformed, bad anatomy, disfigured, poorly drawn face, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, disconnected head, malformed hands, long neck, mutated hands and fingers, bad hands, missing fingers, cropped, worst quality, low quality, mutation, poorly drawn, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, missing fingers, fused fingers, abnormal eye proportion, Abnormal hands, abnormal legs, abnormal feet,  abnormal fingers"
 width     = 1080
 height    = 1920 # standard full HD height and width generating a 9:16 image (portrait mode)
-guidance  = round(random.uniform(0, 15), 1) # guidance scale from 0 to 15 with 1 decimal point
+guidance = random.randint(0,4) # results in the best images so far..
 steps     = 20 # 20 is enough for now
 seed      = random.randint(0,9999999999) # random seed from 0 to 9999999999
 
@@ -95,5 +94,5 @@ image = pipe(
 end_time = time.time()
 generation_time = end_time - start_time
 print(f"Generating image took: {generation_time} seconds")
-save_path = os.path.join(os.path.dirname(__file__), f"../types/image-provider/IMG.png")
+save_path = os.path.join(os.path.dirname(__file__), f"..\\nodejs\\image-provider\\IMG.png")
 image.save(save_path)
