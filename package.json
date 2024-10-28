@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "ts-node src/app.ts",
     "lint": "npx eslint .",
     "format": "prettier --write ."
