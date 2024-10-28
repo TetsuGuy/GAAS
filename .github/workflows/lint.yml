@@ -1,14 +1,13 @@
-name: Lint TypeScript Files
+name: Lint and Format Check
 
-# Run the workflow on pull requests to main or any other branches you'd like
 on:
   pull_request:
     branches:
       - main
-      - '**'
+      - "**"
 
 jobs:
-  lint:
+  lint_and_format:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,24 +17,30 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
 
       - name: Run ESLint
         run: npm run lint
-        continue-on-error: true # Continue even if linting fails
+        continue-on-error: true
 
-      - name: Add PR Comment if Lint Fails
-        if: failure() # This step runs only if the previous linting step failed
+      - name: Run Prettier Check
+        run: npx prettier --check .
+        continue-on-error: true # Continue even if Prettier check fails
+
+      - name: Add PR Comment if Lint or Format Check Fails
+        if: failure() # Run if any step above failed
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
-            🚫 **Linting Failed**
-            Your pull request has linting issues. Please run `npm run lint` locally and fix the issues.
+            🚫 **Linting or Formatting Check Failed**
+            Your pull request has issues with either linting or code formatting.
+            - Run `npm run lint` to fix linting issues.
+            - Run `npm run format` to apply Prettier formatting.
 
-      # Optional: Fail the workflow if linting fails
-      - name: Fail on Lint Errors
+      # Explicitly fail the job if any of the checks failed
+      - name: Fail on Lint or Format Errors
         if: failure()
         run: exit 1

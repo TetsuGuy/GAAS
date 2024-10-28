@@ -20,7 +20,7 @@ interface MulterRequest {
 }
 
 export class ServerExpress implements Server {
-  constructor(public app: Application) { }
+  constructor(public app: Application) {}
 
   private checkApiKey(req: Request, res: Response, next: NextFunction) {
     const VALID_API_KEY = process.env.API_KEY
