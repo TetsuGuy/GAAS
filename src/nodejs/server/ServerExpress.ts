@@ -4,7 +4,8 @@ import { Request, Response, Application, NextFunction } from "express"
 import { ImageProviderAws } from "../image-provider/ImageProviderAws"
 import { ImageProviderPython } from "../image-provider/ImageProviderPython"
 import multer from "multer"
-
+import { error } from "console"
+import fs from "fs"
 const upload = multer({ storage: multer.memoryStorage() })
 
 interface MulterRequest {
@@ -19,7 +20,7 @@ interface MulterRequest {
 }
 
 export class ServerExpress implements Server {
-  constructor(public app: Application) {}
+  constructor(public app: Application) { }
 
   private checkApiKey(req: Request, res: Response, next: NextFunction) {
     const VALID_API_KEY = process.env.API_KEY
@@ -108,7 +109,14 @@ export class ServerExpress implements Server {
         async (_req: Request, res: Response) => {
           try {
             const imagePath = await imageProviderPython.createImage()
+
             res.sendFile(imagePath, (err: any) => {
+              fs.unlink(imagePath, (err) => {
+                if (err) {
+                  console.error("Error deleting image", err)
+                }
+              })
+
               if (err) {
                 res.status(500).send("Error generating image")
                 throw err
