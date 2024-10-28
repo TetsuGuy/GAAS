@@ -1,0 +1,41 @@
+name: Lint TypeScript Files
+
+# Run the workflow on pull requests to main or any other branches you'd like
+on:
+  pull_request:
+    branches:
+      - main
+      - '**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true # Continue even if linting fails
+
+      - name: Add PR Comment if Lint Fails
+        if: failure() # This step runs only if the previous linting step failed
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            🚫 **Linting Failed**
+            Your pull request has linting issues. Please run `npm run lint` locally and fix the issues.
+
+      # Optional: Fail the workflow if linting fails
+      - name: Fail on Lint Errors
+        if: failure()
+        run: exit 1

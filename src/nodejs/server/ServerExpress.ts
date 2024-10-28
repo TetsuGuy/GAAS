@@ -3,8 +3,8 @@ import { Request, Response, Application, NextFunction } from "express"
 
 import { ImageProviderAws } from "../image-provider/ImageProviderAws"
 import { ImageProviderPython } from "../image-provider/ImageProviderPython"
+
 import multer from "multer"
-import { error } from "console"
 const upload = multer({ storage: multer.memoryStorage() })
 
 interface MulterRequest {
