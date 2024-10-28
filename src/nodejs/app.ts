@@ -1,4 +1,4 @@
-import { ServerExpress } from "./nodejs/server/ServerExpress"
+import { ServerExpress } from "./src/server/ServerExpress"
 
 import express from "express"
 import dotenv from "dotenv"

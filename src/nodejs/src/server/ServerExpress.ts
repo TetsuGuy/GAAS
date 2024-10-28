@@ -1,12 +1,12 @@
-import { Server } from "./Server"
-import { Request, Response, Application, NextFunction } from "express"
+import express, { Request, Response, Application, NextFunction } from "express"
+import multer from "multer"
+import fs from "fs"
+import WebSocket from "ws"
+import path from "path"
 
+import { Server } from "./Server"
 import { ImageProviderAws } from "../image-provider/ImageProviderAws"
 import { ImageProviderPython } from "../image-provider/ImageProviderPython"
-import multer from "multer"
-import { error } from "console"
-import fs from "fs"
-const upload = multer({ storage: multer.memoryStorage() })
 
 interface MulterRequest {
   file?: {
@@ -38,13 +38,39 @@ export class ServerExpress implements Server {
 
   setup() {
     try {
+      const upload = multer({ storage: multer.memoryStorage() })
       const imageProviderAws = new ImageProviderAws()
       const imageProviderPython = new ImageProviderPython()
-
       const port = process.env.PORT || 3000
+      const wsport = process.env.WSPORT || 3001
+      const rootDir = path.resolve(__dirname, "..", "..", "..")
 
-      this.app.listen(port, () => {
+      this.app.use(express.static(path.join(rootDir, "svelte", "public")))
+
+      const server = this.app.listen(port, () => {
         console.log(`Server running on port ${port}`)
+      })
+
+      const wss = new WebSocket.Server({ port: wsport as number })
+
+      wss.on("connection", (ws) => {
+        console.log("Client connected")
+
+        ws.on("message", (message: string) => {
+          const data = JSON.parse(message)
+          if (data.action === "generate") {
+            // Simulate image generation
+            setTimeout(() => {
+              const generatedImageUrl =
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSctuz6PbqpENPriLnMkKVP0u_Cyn-Hfd7xCQ&s" // Replace with actual URL
+              ws.send(JSON.stringify({ image: generatedImageUrl }))
+            }, 3000) // Simulating a delay for image generation
+          }
+        })
+
+        ws.on("close", () => {
+          console.log("Client disconnected")
+        })
       })
 
       this.app.get(
@@ -100,6 +126,14 @@ export class ServerExpress implements Server {
             res.status(500).send("Error uploading file")
             throw e
           }
+        }
+      )
+
+      this.app.get(
+        "/generate",
+        this.checkApiKey,
+        async (req: Request, res: Response) => {
+          res.sendFile(path.join(rootDir, "svelte", "public", "index.html"))
         }
       )
 
