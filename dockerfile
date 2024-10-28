@@ -11,7 +11,6 @@ RUN apt-get update && \
     libffi-dev \
     python3-pip \
     python3-dev && \
-    # Install Python 3.10.11
     wget https://www.python.org/ftp/python/3.10.11/Python-3.10.11.tgz && \
     tar -xf Python-3.10.11.tgz && \
     cd Python-3.10.11 && \
@@ -36,19 +35,21 @@ RUN pip3 install --no-cache-dir --upgrade pip
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json first to leverage Docker cache for dependencies
 COPY package*.json ./
 
-# Install Node.js dependencies
+# Install Node.js dependencies only for production
 RUN npm install --production
 
-# Copy the Python requirements file and install dependencies
-COPY ./src/python/requirements.txt ./
+# Copy Python requirements and install Python dependencies
+COPY ./src/python/requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
+# Copy the application code
 COPY . .
 
-# Expose the port and run the application
+# Expose the application's port
 EXPOSE 3000
+
+# Start the Node.js application
 CMD ["node", "dist/app.js"]
