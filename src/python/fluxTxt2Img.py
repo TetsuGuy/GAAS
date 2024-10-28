@@ -95,5 +95,5 @@ image = pipe(
 end_time = time.time()
 generation_time = end_time - start_time
 print(f"Generating image took: {generation_time} seconds")
-save_path = os.path.join(os.path.dirname(__file__), "../types/image-provider/image.png")
+save_path = os.path.join(os.path.dirname(__file__), f"../types/image-provider/IMG.png")
 image.save(save_path)
