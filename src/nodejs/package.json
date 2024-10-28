@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
+    "dev": "ts-node-dev app.ts",
     "lint": "npx eslint .",
     "format": "prettier --write ."
   },

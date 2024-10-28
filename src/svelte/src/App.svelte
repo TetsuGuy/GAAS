@@ -11,7 +11,8 @@
 
   onMount(() => {
     // Connect to the WebSocket server
-    socket = new WebSocket("ws://localhost:3001") // Change the URL as needed
+    const wsport = 3001
+    socket = new WebSocket(`ws://localhost:${wsport}`) // Change the URL as needed
     let ready = false
     const interval = setInterval(() => {
         if (socket && socket.readyState === WebSocket.OPEN) {

@@ -1,7 +1,7 @@
 import express, { Request, Response, Application, NextFunction } from "express"
 import multer from "multer"
 import fs from "fs"
-import WebSocket from 'ws';
+import WebSocket from "ws"
 import path from "path"
 
 import { Server } from "./Server"
@@ -43,7 +43,7 @@ export class ServerExpress implements Server {
       const imageProviderPython = new ImageProviderPython()
       const port = process.env.PORT || 3000
       const wsport = process.env.WSPORT || 3001
-      const rootDir = path.resolve(__dirname, "..", "..")
+      const rootDir = path.resolve(__dirname, "..", "..", "..")
 
       this.app.use(express.static(path.join(rootDir, "svelte", "public")))
 
@@ -51,7 +51,7 @@ export class ServerExpress implements Server {
         console.log(`Server running on port ${port}`)
       })
 
-      const wss = new WebSocket.Server({ port: wsport as number });
+      const wss = new WebSocket.Server({ port: wsport as number })
 
       wss.on("connection", (ws) => {
         console.log("Client connected")

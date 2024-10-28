@@ -36,7 +36,7 @@ RUN pip3 install --no-cache-dir --upgrade pip
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json first to leverage Docker cache for dependencies
-COPY package*.json ./
+COPY ./src/nodejs/package*.json ./
 
 # Install Node.js dependencies only for production
 RUN npm install --production
@@ -52,4 +52,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the Node.js application
-CMD ["node", "dist/app.js"]
+CMD ["node", "src/nodejs/dist/app.js"]
