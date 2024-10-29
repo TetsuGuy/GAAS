@@ -1,5 +1,5 @@
-export interface ImageProvider<A = any, B = any, C = any> {
-  getImage(): Promise<A>
-  saveImage(...options: any): Promise<B>
-  createImage(): Promise<C>
+export interface ImageProvider {
+  getImage(...options: any): Promise<any>
+  saveImage(...options: any): Promise<any>
+  createImage(...options: any): Promise<any>
 }

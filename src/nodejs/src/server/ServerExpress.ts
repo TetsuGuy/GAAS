@@ -78,7 +78,7 @@ export class ServerExpress implements Server {
         this.checkApiKey,
         async (req: Request, res: Response) => {
           try {
-            const { buffer, type } = await imageProviderAws.getImage()
+            const { buffer, type } = await imageProviderAws.getRandomImage()
             res.setHeader("Content-Type", type)
             res.send(buffer)
           } catch (e) {
@@ -114,7 +114,7 @@ export class ServerExpress implements Server {
               return
             }
             const { buffer, originalname, mimetype } = req.file
-            const imageUrl = await imageProviderAws.saveImage(
+            await imageProviderAws.saveImage(
               buffer,
               originalname,
               mimetype
@@ -136,6 +136,21 @@ export class ServerExpress implements Server {
           res.sendFile(path.join(rootDir, "svelte", "public", "index.html"))
         }
       )
+
+      this.app.get("/next", this.checkApiKey, async (req: Request, res: Response) => {
+        try {
+          const { buffer, type, index } = await imageProviderAws.getNextImage()
+          res.setHeader("Content-Type", type)
+          res.setHeader("X-Index", index)
+          res.send(buffer)
+        } catch (e) {
+          if (e === "Not found") {
+            res.status(404).send({ error: "Image not found" })
+          } else {
+            res.status(500).send("Server Error:" + e)
+          }
+        }
+      })
 
       this.app.get(
         "/create",
