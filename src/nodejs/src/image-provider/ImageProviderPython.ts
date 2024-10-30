@@ -4,10 +4,13 @@ import { ImageProvider } from "./ImageProvider"
 
 export class ImageProviderPython implements ImageProvider {
   getImage(): Promise<any> {
-    throw Error("Not yet implemented")
+    throw Error("not implemented")
   }
   saveImage(): Promise<any> {
-    throw Error("Not yet implemented")
+    throw Error("not implemented")
+  }
+  getRandomImage(): Promise<any> {
+    throw Error("not implemented")
   }
   createImage(): Promise<string> {
     const promise = new Promise<string>((resolve) => {

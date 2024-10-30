@@ -15,7 +15,7 @@ export class ImageProviderAws implements ImageProvider {
     if (!accessKeyId || !secretAccessKey || !region || !bucket) {
       throw Error("Can't initialize ImageProviderAWS. Missing values.")
     }
-    // S3 Bucket
+
     this.s3 = new AWS.S3({
       accessKeyId,
       secretAccessKey,
@@ -48,7 +48,11 @@ export class ImageProviderAws implements ImageProvider {
     return this.s3.getObject(requestParams).promise()
   }
 
-  async getNextImage(): Promise<{ buffer: Buffer; type: string, index: number }> {
+  async getNextImage(): Promise<{
+    buffer: Buffer
+    type: string
+    index: number
+  }> {
     let images = []
     if (!this.nextImages.length) {
       images = await this.getImages()
@@ -71,7 +75,7 @@ export class ImageProviderAws implements ImageProvider {
 
   async getRandomImage(): Promise<{ buffer: Buffer; type: string }> {
     const imageFiles = await this.getImages()
-    const randomImage = 
+    const randomImage =
       imageFiles[Math.floor(Math.random() * imageFiles.length)]
 
     if (!randomImage.Key) {
