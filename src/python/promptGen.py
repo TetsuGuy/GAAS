@@ -16,7 +16,7 @@ clothes = [
     "black top, black skirt, black boots",
     "black crop top, black skirt, black boots, fishnet tights",
     "baggy black pullover and black thigh high stockings",
-    "grey pullover with a black mini skirt. She has black hair with purple strands",
+    "grey pullover with a black mini skirt",
     "a black dress, a black corset and black sleeves",
 ]
 
