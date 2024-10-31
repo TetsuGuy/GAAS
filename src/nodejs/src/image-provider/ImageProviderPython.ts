@@ -13,11 +13,15 @@ export class ImageProviderPython implements ImageProvider {
     throw Error("not implemented")
   }
   createImage(): Promise<string> {
-    const promise = new Promise<string>((resolve) => {
-      const pythonProcess = spawn("python", ["src/python/fluxTxt2Img.py"])
-      pythonProcess.on("close", (_code: any) => {
-        const imagePath = path.join(__dirname, "IMG.png")
-        resolve(imagePath)
+    const promise = new Promise<string>((resolve, reject) => {
+      const pythonProcess = spawn("python", ["../python/fluxTxt2Img.py"])
+      pythonProcess.on("close", (code) => {
+        if (code !== 0) {
+          reject(new Error(`Python script exited with code ${code}`))
+        } else {
+          const imagePath = path.join(__dirname, "IMG.png")
+          resolve(imagePath)
+        }
       })
     })
     return promise
