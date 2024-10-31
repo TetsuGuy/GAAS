@@ -70,7 +70,6 @@ def randomize_prompt():
     angle = random.choice(camera_angles)
     hair = random.choice(hairs)
     pose_choice = random.choice(pose)
-    style = random.choice(styles)
     
     new_prompt = f"photo of a woman {pose_choice} {location}. She is wearing {clothing}. Her makeup is {makeup_choice}. She has {hair}. The angle is a {angle}."
     
