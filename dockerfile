@@ -17,11 +17,9 @@ RUN apt-get update && \
     ./configure --enable-optimizations && \
     make -j$(nproc) && \
     make altinstall && \
-    # Create symlinks for Python and pip
     ln -sf /usr/local/bin/python3.10 /usr/bin/python3 && \
     ln -sf /usr/local/bin/pip3.10 /usr/bin/pip3 && \
     ln -sf /usr/local/bin/python3.10 /usr/bin/python && \
-    # Cleanup
     cd .. && \
     rm -rf Python-3.10.11 Python-3.10.11.tgz && \
     apt-get remove --purge -y build-essential wget && \
@@ -35,21 +33,29 @@ RUN pip3 install --no-cache-dir --upgrade pip
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json first to leverage Docker cache for dependencies
-COPY ./src/nodejs/package*.json ./
-
-# Install Node.js dependencies only for production
-RUN npm install --production
-
 # Copy Python requirements and install Python dependencies
 COPY ./src/python/requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copy the application code
+# Copy backend package.json and install all dependencies (including devDependencies)
+COPY ./src/nodejs/package*.json ./src/nodejs/
+RUN cd src/nodejs && npm install  # This installs both dependencies and devDependencies
+
+# Copy Svelte frontend files, including rollup.config.js and all source code
+COPY ./src/svelte ./src/svelte
+RUN cd src/svelte && npm install
+
+# Build the Svelte frontend
+RUN cd src/svelte && npm run build
+
+# Copy all remaining application code
 COPY . .
 
-# Expose the application's port
+# Expose the application’s port
 EXPOSE 3000
+
+# Build the backend (TypeScript compilation)
+RUN cd src/nodejs && npm run build
 
 # Start the Node.js application
 CMD ["node", "src/nodejs/dist/app.js"]
