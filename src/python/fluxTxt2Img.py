@@ -89,10 +89,7 @@ guidance        = round(random.uniform(0, 15), 1) # results in the best images s
 steps           = 20 # 20 is enough for now
 seed            = random.randint(0,9999999999) # random seed from 0 to 9999999999
 
-print(f"Generating Image with seed: {seed}, guidance: {guidance}, prompt: {prompt}, loras: {loras}, weights: {weights}")
-
 # Generation
-start_time = time.time()
 image = pipe(
   prompt=prompt,
   width=width,
@@ -101,8 +98,5 @@ image = pipe(
   num_inference_steps=steps,
   generator=torch.Generator("cpu").manual_seed(seed)
 ).images[0]
-end_time = time.time()
-generation_time = end_time - start_time
-print(f"Generating image took: {generation_time} seconds")
-save_path = os.path.join(os.path.dirname(__file__), f"..\\nodejs\\src\\image-provider\\{seed}_IMG.png")
+save_path = os.path.join(os.path.dirname(__file__), f"..\\nodejs\\src\\image-provider\\_{seed}_IMG.png")
 image.save(save_path)
