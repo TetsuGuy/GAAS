@@ -88,7 +88,7 @@ height          = 1920 # standard full HD height and width generating a 9:16 ima
 guidance        = round(random.uniform(0, 15), 1) # results in the best images so far..
 steps           = 20 # 20 is enough for now
 seed            = random.randint(0,9999999999) # random seed from 0 to 9999999999
-
+print(f"Generated seed: {seed}")
 # Generation
 image = pipe(
   prompt=prompt,

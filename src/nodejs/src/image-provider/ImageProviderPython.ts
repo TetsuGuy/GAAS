@@ -11,10 +11,28 @@ export class ImageProviderPython implements ImageProvider {
   }
   createImage(): Promise<string> {
     const promise = new Promise<string>((resolve) => {
-      const pythonProcess = spawn("python", ["src/python/fluxTxt2Img.py"])
-      pythonProcess.on("close", (_code: any) => {
-        const imagePath = path.join(__dirname, "IMG.png")
-        resolve(imagePath)
+      const pythonProcess = spawn("python", ["../python/fluxTxt2Img.py"])
+      let seed: number | null = null
+
+      pythonProcess.stdout.on("data", (data) => {
+        const output = data.toString()
+        const seedMatch = output.match(/Generated seed: (\d+)/)
+        if (seedMatch) {
+          seed = parseInt(seedMatch[1], 10)
+        }
+      })
+
+      pythonProcess.on("close", (code) => {
+        if (code !== 0) {
+          throw Error(`Python script exited with code ${code}`)
+        } else {
+          const imagePath = path.join(__dirname, `_${seed}_IMG.png`)
+          if (seed !== null) {
+            resolve(imagePath)
+          } else {
+            throw Error("Seed not found in Python script output")
+          }
+        }
       })
     })
     return promise
