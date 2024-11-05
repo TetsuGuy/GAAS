@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "dev": "ts-node-dev app.ts",
     "lint": "npx eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build": "tsc",
+    "production": "node dist/app.js",
+    "build+production": "npm run build && npm run production"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.13.0",
+    "eslint-config-flat-gitignore": "^0.3.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-define-config": "^2.1.0",
     "eslint-plugin-prettier": "^5.2.1",
